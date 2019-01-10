@@ -1,0 +1,31 @@
+version: '3.1'
+
+services:
+
+  customer-service:
+    build: ./customer-service
+    restart: always
+    ports:
+      - "3001:3000"
+    networks:
+      - overlay
+
+  book-service:
+    build: ./book-service
+    restart: always
+    ports:
+      - "3002:3001"
+    networks:
+      - overlay
+
+  lend-service:
+    build: ./lend-service
+    restart: always
+    ports:
+      - "3003:3002"
+    networks:
+      - overlay
+
+networks:
+  overlay:
+    
