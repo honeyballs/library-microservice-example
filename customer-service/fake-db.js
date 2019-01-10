@@ -11,7 +11,7 @@ const addCustomer = (customer) => {
 const updateCustomer = (customer) => {
     const index = customers.findIndex(element => element.id === customer.id);
     customers[index] = customer;
-    return customer;
+    return customers[index];
 }
 
 const removeCustomer = id => {
