@@ -30,9 +30,9 @@ const getBookById = id => {
     return books.find(book => book.id === id);
 }
 
-const setAvailable = (id, available) => {
+const setAvailable = (id) => {
     const index = books.findIndex(book => book.id === id);
-    books[index] = {...books[index], available};
+    books[index] = {...books[index], available: !books[index].available};
     return books[index];
 }
 

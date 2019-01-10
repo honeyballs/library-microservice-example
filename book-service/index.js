@@ -30,7 +30,7 @@ app.post('/getId', (req, res) => {
 })
 
 app.post('/setAvailable', (req, res) => {
-    res.json(db.setAvailable(req.body.id, req.body.available));
+    res.json(db.setAvailable(req.body.id));
 })
 
 app.listen(PORT, () => console.log(`Book Service listening on ${PORT}`));
