@@ -15,6 +15,8 @@ app.get('/', (req, res) => {
     res.send('Api Gateway is up and running.');
 });
 
+/* Customer API */
+
 app.post('/customer/add', (req, res) => {
     fetch('http://customer-service:3000/add', {...fetchData, body: JSON.stringify(req.body)})
         .then(response => response.json())
@@ -49,6 +51,8 @@ app.post('/customer/getId', (req, res) => {
         .then(json => res.json(json))
         .catch(err => console.log(err));
 });
+
+/* Book API */
 
 app.post('/book/add', (req, res) => {
     fetch('http://book-service:3001/add', {...fetchData, body: JSON.stringify(req.body)})
@@ -91,6 +95,8 @@ app.post('/book/setAvailable', (req, res) => {
         .then(json => res.json(json))
         .catch(err => console.log(err));
 });
+
+/* Lend API */
 
 app.post('/lend/add', (req, res) => {
     fetch('http://lend-service:3002/add', {...fetchData, body: JSON.stringify(req.body)})
