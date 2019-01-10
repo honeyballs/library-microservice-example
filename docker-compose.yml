@@ -26,6 +26,14 @@ services:
     networks:
       - overlay
 
+  api:
+    build: ./api-gateway
+    restart: always
+    ports:
+      - "3004:3003"
+    networks: 
+      - overlay
+
 networks:
   overlay:
     

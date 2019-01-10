@@ -1,5 +1,5 @@
 {
-  "name": "lend-service",
+  "name": "api-gateway",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,6 +10,6 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.16.4",
-    "uuid": "^3.3.2"
+    "node-fetch": "^2.3.0"
   }
 }
