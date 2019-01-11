@@ -19,7 +19,7 @@ fetch(`http://${window.location.host}/customer/getAll`, {
         var tdLastname = document.createElement("td")
         tdLastname.appendChild(document.createTextNode(customer.lastname));
         var tdBirthday = document.createElement("td")
-        tdBirthday.appendChild(document.createTextNode(customer.birthday));
+        tdBirthday.appendChild(document.createTextNode(new Date(customer.birthday).toDateString()));
         var tdAddress = document.createElement("td")
         tdAddress.appendChild(document.createTextNode(customer.address));
         row.append(tdFirstname, tdLastname, tdBirthday, tdAddress);
