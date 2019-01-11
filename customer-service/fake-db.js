@@ -1,6 +1,23 @@
 let uuid = require('uuid/v1');
 let customers = [];
 
+// Fill with mock data
+customers.push({
+    id: uuid(),
+    firstname: "Max",
+    lastname: "Mustermann",
+    address: "Musterstr. 12",
+    birthday: new Date(1990, 9, 15).getTime()
+},
+{
+    id: uuid(),
+    firstname: "Klaus",
+    lastname: "Müller",
+    address: "Hauptstr. 2",
+    birthday: new Date(1965, 3, 21).getTime()
+}
+);
+
 const addCustomer = (customer) => {
     const id = uuid();
     let newCustomer = {...customer, id: id}

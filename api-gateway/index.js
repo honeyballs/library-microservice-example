@@ -9,10 +9,25 @@ const fetchData = {
     }
 }
 
+app.use('/static', express.static(__dirname + '/public'));
 app.use(express.json());
 
+/* The library frontend */
+
 app.get('/', (req, res) => {
-    res.send('Api Gateway is up and running.');
+    res.sendFile(__dirname + '/public/index.html');
+});
+
+app.get('/customers', (req, res) => {
+    res.sendFile(__dirname + '/public/pages/customers/customers.html')
+})
+
+app.get('/books', (req, res) => {
+    res.sendFile(__dirname + '/public/pages/books/books.html')
+});
+
+app.get('/lends', (req, res) => {
+    res.sendFile(__dirname + '/public/pages/lends/lends.html')
 });
 
 /* Customer API */

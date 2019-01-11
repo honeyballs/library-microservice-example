@@ -1,6 +1,29 @@
 let uuid = require('uuid/v1');
 let books = [];
 
+books.push({
+    id: uuid(),
+    isbn: "978-3-548-26308-3",
+    title: "Es",
+    author: "Stephen King",
+    publisher: "Ullstein",
+    year: 2005,
+    genre: "Horror",
+    condition: "New",
+    available: true
+},
+{
+    id: uuid(),
+    isbn: "978-3-548-26308-3",
+    title: "Schnelles Denken, langsames Denken",
+    author: "Daniel Kahneman",
+    publisher: "Penguin Verlag",
+    year: 2016,
+    genre: "Sachbuch",
+    condition: "New",
+    available: true
+});
+
 const addBook = book => {
     const id = uuid();
     let newBook = { ...book,

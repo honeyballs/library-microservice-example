@@ -6,7 +6,7 @@ services:
     build: ./customer-service
     restart: always
     ports:
-      - "3001:3000"
+      - "3000:3000"
     networks:
       - overlay
 
@@ -14,7 +14,7 @@ services:
     build: ./book-service
     restart: always
     ports:
-      - "3002:3001"
+      - "3001:3001"
     networks:
       - overlay
 
@@ -22,7 +22,7 @@ services:
     build: ./lend-service
     restart: always
     ports:
-      - "3003:3002"
+      - "3002:3002"
     networks:
       - overlay
 
@@ -30,7 +30,7 @@ services:
     build: ./api-gateway
     restart: always
     ports:
-      - "3004:3003"
+      - "3003:3003"
     networks: 
       - overlay
 
