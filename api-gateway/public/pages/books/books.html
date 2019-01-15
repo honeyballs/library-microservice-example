@@ -4,9 +4,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/static/pages/books/style.css">
     <title>Customer management</title>
 </head>
 <body>
-    <h1>Customers</h1>
+    <h1>Books</h1>
+    <table id="books-table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Publisher</th>
+                <th>Year</th>
+                <th>ISBN</th>
+                <th>Genre</th>
+                <th>Condition</th>
+                <th>Available?</th>
+            </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+    </table>
+
+    <h2>Add a book</h2>
+    <form id="create-form">
+        <label for="title-input">Title</label>
+        <input type="text" id="title-input" name="title"/>
+        <br/>
+        <label for="author-input">Author</label>
+        <input type="text" id="author-input" name="author"/>
+        <br/>
+        <label for="publisher-input">Publisher</label>
+        <input type="text" id="publisher-input" name="publisher"/>
+        <br/>
+        <label for="year-input">Year</label>
+        <input type="number" id="year-input" name="year" maxlength="4"/>
+        <br/>
+        <label for="isbn-input">ISBN</label>
+        <input type="text" id="isbn-input" name="isbn"/>
+        <br/>
+        <label for="genre-input">Genre</label>
+        <input type="text" id="genre-input" name="genre"/>
+        <br/>
+        <label for="condition-input">Condition</label>
+        <input type="text" id="condition-input" name="condition"/>
+        <br/>
+        <label for="available-input">Available?</label>
+        <input type="checkbox" id="available-input" name="available"/>
+        <br/>
+        <input type="submit" value="Create" id="submit-button"/>
+    </form>
+    
+    <script src="/static/pages/books/main.js"></script>
+
 </body>
 </html>
