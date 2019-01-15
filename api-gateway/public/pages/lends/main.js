@@ -9,6 +9,7 @@ var lendToCreate = {
 
 function renderTable() {
     var tbody = document.getElementById("table-body");
+    tbody.innerHTML = '';
     lends.forEach(lend => {
         var row = document.createElement("tr");
 
@@ -187,6 +188,23 @@ document.getElementById("create-button").addEventListener("click", event => {
         .then(json => {
             console.log(json);
             lends.push(json);
+            
+            // Reset display and temp element
+            var elements = document.querySelectorAll(".added");
+            elements.forEach(element => {
+                element.classList.remove("added"); 
+                if (element.className === "book-li"){
+                    var span = element.getElementsByTagName("span")[0];
+                    span.firstElementChild.value = '';
+                    span.lastElementChild.innerText = "Add";
+                } else if (element.className === "customer-li") {
+                    element.getElementsByTagName("button")[0].innerText = "Add";
+                }
+            });
+            lendToCreate = {
+                customer: {},
+                books: []
+            };
             renderTable();
         })
         .catch(err => console.log(err));
