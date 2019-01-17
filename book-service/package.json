@@ -12,6 +12,7 @@
   "author": "Yannick Bals",
   "license": "ISC",
   "dependencies": {
+    "camunda-external-task-client-js": "^1.1.1",
     "express": "^4.16.4",
     "uuid": "^3.3.2"
   }

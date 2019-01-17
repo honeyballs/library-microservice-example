@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1pdq496" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="2.2.4">
+  <bpmn:process id="BookAvailability" isExecutable="true">
+    <bpmn:startEvent id="start-available" name="Lend book">
+      <bpmn:outgoing>SequenceFlow_1sbippc</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1sbippc" sourceRef="start-available" targetRef="available-task" />
+    <bpmn:serviceTask id="available-task" name="Set availability" camunda:type="external" camunda:topic="change-available">
+      <bpmn:incoming>SequenceFlow_1sbippc</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1li5wco</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="confirm-task" name="Confirm lend" camunda:type="external" camunda:topic="set-lend">
+      <bpmn:incoming>SequenceFlow_0zlbfe6</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0t94w66</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="EndEvent_06d265a" name="Lend successful">
+      <bpmn:incoming>SequenceFlow_187urw3</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="available-success" name="Success?">
+      <bpmn:incoming>SequenceFlow_1li5wco</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0zlbfe6</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_1kh0cf6</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_1li5wco" sourceRef="available-task" targetRef="available-success" />
+    <bpmn:sequenceFlow id="SequenceFlow_0zlbfe6" name="Yes" sourceRef="available-success" targetRef="confirm-task">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${available==false}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_1kh0cf6" name="No" sourceRef="available-success" targetRef="rollback-lend-task">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${available!=false}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:serviceTask id="rollback-lend-task" name="Rollback lend" camunda:type="external" camunda:topic="rollback-lend">
+      <bpmn:incoming>SequenceFlow_1kh0cf6</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1u40wa5</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1hl9j5a</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="lend-failure" name="Lend failure">
+      <bpmn:incoming>SequenceFlow_1hl9j5a</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1hl9j5a" sourceRef="rollback-lend-task" targetRef="lend-failure" />
+    <bpmn:exclusiveGateway id="ExclusiveGateway_1v2y9ef" name="Success?">
+      <bpmn:incoming>SequenceFlow_0t94w66</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_187urw3</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_1is7lnn</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_0t94w66" sourceRef="confirm-task" targetRef="ExclusiveGateway_1v2y9ef" />
+    <bpmn:sequenceFlow id="SequenceFlow_187urw3" name="Yes" sourceRef="ExclusiveGateway_1v2y9ef" targetRef="EndEvent_06d265a">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${state=="ACTIVE"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_1is7lnn" sourceRef="ExclusiveGateway_1v2y9ef" targetRef="rollback-available-task" />
+    <bpmn:serviceTask id="rollback-available-task" name="Rollback available" camunda:type="external" camunda:topic="rollback-available">
+      <bpmn:incoming>SequenceFlow_1is7lnn</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1u40wa5</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1u40wa5" sourceRef="rollback-available-task" targetRef="rollback-lend-task" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="BookAvailability">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="start-available">
+        <dc:Bounds x="173" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="165" y="145" width="52" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1sbippc_di" bpmnElement="SequenceFlow_1sbippc">
+        <di:waypoint x="209" y="120" />
+        <di:waypoint x="259" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0lx00bm_di" bpmnElement="available-task">
+        <dc:Bounds x="259" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1sf0mju_di" bpmnElement="confirm-task">
+        <dc:Bounds x="626" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_06d265a_di" bpmnElement="EndEvent_06d265a">
+        <dc:Bounds x="1085" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1064" y="145" width="79" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_1gxchjq_di" bpmnElement="available-success" isMarkerVisible="true">
+        <dc:Bounds x="445" y="95" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="446" y="71" width="48" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1li5wco_di" bpmnElement="SequenceFlow_1li5wco">
+        <di:waypoint x="359" y="120" />
+        <di:waypoint x="445" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0zlbfe6_di" bpmnElement="SequenceFlow_0zlbfe6">
+        <di:waypoint x="495" y="120" />
+        <di:waypoint x="626" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="552" y="102" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1kh0cf6_di" bpmnElement="SequenceFlow_1kh0cf6">
+        <di:waypoint x="470" y="145" />
+        <di:waypoint x="470" y="233" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="478" y="186" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0x0ooad_di" bpmnElement="rollback-lend-task">
+        <dc:Bounds x="420" y="233" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_1gub4js_di" bpmnElement="lend-failure">
+        <dc:Bounds x="452" y="389" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="442" y="432" width="58" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1hl9j5a_di" bpmnElement="SequenceFlow_1hl9j5a">
+        <di:waypoint x="470" y="313" />
+        <di:waypoint x="470" y="389" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ExclusiveGateway_1v2y9ef_di" bpmnElement="ExclusiveGateway_1v2y9ef" isMarkerVisible="true">
+        <dc:Bounds x="857" y="95" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="858" y="71" width="48" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0t94w66_di" bpmnElement="SequenceFlow_0t94w66">
+        <di:waypoint x="726" y="120" />
+        <di:waypoint x="857" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_187urw3_di" bpmnElement="SequenceFlow_187urw3">
+        <di:waypoint x="907" y="120" />
+        <di:waypoint x="1085" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="987" y="102" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1is7lnn_di" bpmnElement="SequenceFlow_1is7lnn">
+        <di:waypoint x="882" y="145" />
+        <di:waypoint x="882" y="233" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_1kvx7ss_di" bpmnElement="rollback-available-task">
+        <dc:Bounds x="832" y="233" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1u40wa5_di" bpmnElement="SequenceFlow_1u40wa5">
+        <di:waypoint x="832" y="273" />
+        <di:waypoint x="520" y="273" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

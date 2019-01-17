@@ -34,6 +34,14 @@ services:
     networks: 
       - overlay
 
+  camunda:
+    image: honeyball/microservice-camunda-thm:latest
+    restart: always
+    ports:
+      - "8080:8080"
+    networks:
+      - overlay
+
 networks:
   overlay:
     
