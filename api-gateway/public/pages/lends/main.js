@@ -7,14 +7,35 @@ var lendToCreate = {
     books: []
 }
 
+function returnBooks(data) {
+    fetch(`http://${window.location.host}/lend/return`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+        .then(res => res.json())
+        .then(json => {
+            console.log(json)
+            newLend = json;
+            var replaceIndex = lends.findIndex(lend => lend.id === newLend.id);
+            if (newLend.books.length > 0 || newLend.customer.fees > 0) {
+                lends[replaceIndex] = newLend;
+            } else {
+                lends.splice(replaceIndex, 1);
+            }
+            renderTable();
+        })
+        .catch(err => console.log(err));
+}
+
 function renderTable() {
     var tbody = document.getElementById("table-body");
     tbody.innerHTML = '';
     lends.forEach(lend => {
         var row = document.createElement("tr");
 
-        var tdId = document.createElement("td");
-        tdId.appendChild(document.createTextNode(lend.id));
         var tdLenddate = document.createElement("td");
         tdLenddate.appendChild(document.createTextNode(new Date(lend.lenddate).toDateString()));
         var tdFirstname = document.createElement("td");
@@ -30,11 +51,22 @@ function renderTable() {
         lend.books.forEach(book => {
             var li = document.createElement("li");
             li.appendChild(document.createTextNode(`${book.author}: ${book.title}, until: ${new Date(book.returndate).toDateString()}`));
+            
+            // Add a return button to each book
+            var button = document.createElement("button");
+            button.innerText = "Return";
+            button.addEventListener("click", e => {
+                var reqObj = {lendId: lend.id, bookId: book.id};
+                returnBooks(reqObj);
+            });
+            button.style = "margin-left: 10px;";
+            li.appendChild(button);
+
             ulBooks.appendChild(li);
         })
         tdBooks.appendChild(ulBooks);
 
-        row.append(tdId, tdLenddate, tdFirstname, tdLastname, tdFee, tdBooks);
+        row.append(tdLenddate, tdFirstname, tdLastname, tdFee, tdBooks);
         tbody.appendChild(row);
     });
 }
