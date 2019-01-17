@@ -3,10 +3,16 @@ let lends = [];
 
 const addLend = lend => {
     const id = uuid();
-    let newlend = {...lend, id: id, customer: {...lend.customer, fees: 0}};
+    let newlend = {...lend, id: id, state: "PENDING", customer: {...lend.customer, fees: 0}};
     lends.push(newlend);
     return newlend;
 } 
+
+const confirmLend = id => {
+    const index = lends.findIndex(element => element.id === id);
+    lends[index] = {...lends[index], state: "ACTIVE"};
+    return lends[index];
+}
 
 const updateLend = lend => {
     const index = lends.findIndex(element => element.id === lend.id);
@@ -59,6 +65,7 @@ const getLendByCustomer = customerId => {
 
 module.exports = {
     addLend,
+    confirmLend,
     updateLend,
     removeLend,
     returnBook,

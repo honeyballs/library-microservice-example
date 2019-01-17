@@ -3,6 +3,9 @@ const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+//require the client to create it
+const client = require('./camunda-worker').client;
+
 app.use(express.json());
 
 app.get('/', (req, res) => {

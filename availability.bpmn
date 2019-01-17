@@ -4,8 +4,8 @@
     <bpmn:startEvent id="start-available" name="Lend book">
       <bpmn:outgoing>SequenceFlow_1sbippc</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_1sbippc" sourceRef="start-available" targetRef="available-task" />
-    <bpmn:serviceTask id="available-task" name="Set availability" camunda:type="external" camunda:topic="change-available">
+    <bpmn:sequenceFlow id="SequenceFlow_1sbippc" sourceRef="start-available" targetRef="available-false-task" />
+    <bpmn:serviceTask id="available-false-task" name="Set availability" camunda:type="external" camunda:topic="change-available-false">
       <bpmn:incoming>SequenceFlow_1sbippc</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1li5wco</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -21,14 +21,14 @@
       <bpmn:outgoing>SequenceFlow_0zlbfe6</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_1kh0cf6</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="SequenceFlow_1li5wco" sourceRef="available-task" targetRef="available-success" />
+    <bpmn:sequenceFlow id="SequenceFlow_1li5wco" sourceRef="available-false-task" targetRef="available-success" />
     <bpmn:sequenceFlow id="SequenceFlow_0zlbfe6" name="Yes" sourceRef="available-success" targetRef="confirm-task">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${available==false}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${availableSet}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="SequenceFlow_1kh0cf6" name="No" sourceRef="available-success" targetRef="rollback-lend-task">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${available!=false}</bpmn:conditionExpression>
+    <bpmn:sequenceFlow id="SequenceFlow_1kh0cf6" name="No" sourceRef="available-success" targetRef="rollback-lend-create-task">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${availableSet}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:serviceTask id="rollback-lend-task" name="Rollback lend" camunda:type="external" camunda:topic="rollback-lend">
+    <bpmn:serviceTask id="rollback-lend-create-task" name="Rollback lend" camunda:type="external" camunda:topic="rollback-lend-create">
       <bpmn:incoming>SequenceFlow_1kh0cf6</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_1u40wa5</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1hl9j5a</bpmn:outgoing>
@@ -36,7 +36,7 @@
     <bpmn:endEvent id="lend-failure" name="Lend failure">
       <bpmn:incoming>SequenceFlow_1hl9j5a</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_1hl9j5a" sourceRef="rollback-lend-task" targetRef="lend-failure" />
+    <bpmn:sequenceFlow id="SequenceFlow_1hl9j5a" sourceRef="rollback-lend-create-task" targetRef="lend-failure" />
     <bpmn:exclusiveGateway id="ExclusiveGateway_1v2y9ef" name="Success?">
       <bpmn:incoming>SequenceFlow_0t94w66</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_187urw3</bpmn:outgoing>
@@ -46,12 +46,14 @@
     <bpmn:sequenceFlow id="SequenceFlow_187urw3" name="Yes" sourceRef="ExclusiveGateway_1v2y9ef" targetRef="EndEvent_06d265a">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${state=="ACTIVE"}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="SequenceFlow_1is7lnn" sourceRef="ExclusiveGateway_1v2y9ef" targetRef="rollback-available-task" />
-    <bpmn:serviceTask id="rollback-available-task" name="Rollback available" camunda:type="external" camunda:topic="rollback-available">
+    <bpmn:sequenceFlow id="SequenceFlow_1is7lnn" name="No" sourceRef="ExclusiveGateway_1v2y9ef" targetRef="rollback-available-false-task">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${state=="CANCELLED"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:serviceTask id="rollback-available-false-task" name="Rollback available" camunda:type="external" camunda:topic="rollback-available-false">
       <bpmn:incoming>SequenceFlow_1is7lnn</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1u40wa5</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="SequenceFlow_1u40wa5" sourceRef="rollback-available-task" targetRef="rollback-lend-task" />
+    <bpmn:sequenceFlow id="SequenceFlow_1u40wa5" sourceRef="rollback-available-false-task" targetRef="rollback-lend-create-task" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="BookAvailability">
@@ -65,7 +67,7 @@
         <di:waypoint x="209" y="120" />
         <di:waypoint x="259" y="120" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="ServiceTask_0lx00bm_di" bpmnElement="available-task">
+      <bpmndi:BPMNShape id="ServiceTask_0lx00bm_di" bpmnElement="available-false-task">
         <dc:Bounds x="259" y="80" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ServiceTask_1sf0mju_di" bpmnElement="confirm-task">
@@ -101,7 +103,7 @@
           <dc:Bounds x="478" y="186" width="15" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="ServiceTask_0x0ooad_di" bpmnElement="rollback-lend-task">
+      <bpmndi:BPMNShape id="ServiceTask_0x0ooad_di" bpmnElement="rollback-lend-create-task">
         <dc:Bounds x="420" y="233" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="EndEvent_1gub4js_di" bpmnElement="lend-failure">
@@ -134,8 +136,11 @@
       <bpmndi:BPMNEdge id="SequenceFlow_1is7lnn_di" bpmnElement="SequenceFlow_1is7lnn">
         <di:waypoint x="882" y="145" />
         <di:waypoint x="882" y="233" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="890" y="186" width="15" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="ServiceTask_1kvx7ss_di" bpmnElement="rollback-available-task">
+      <bpmndi:BPMNShape id="ServiceTask_1kvx7ss_di" bpmnElement="rollback-available-false-task">
         <dc:Bounds x="832" y="233" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_1u40wa5_di" bpmnElement="SequenceFlow_1u40wa5">

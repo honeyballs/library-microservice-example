@@ -8,7 +8,7 @@ COPY package*.json ./
 RUN npm install --production
 
 # Copy all files
-COPY index.js fake-db.js ./
+COPY index.js fake-db.js camunda-worker.js ./
 
 EXPOSE 3001
 
