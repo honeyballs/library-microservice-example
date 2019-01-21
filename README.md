@@ -95,3 +95,6 @@ Follow the instructions on the Camunda page to start the Camunda server. Run the
 
 Afterwards you can follow the steps from the Base example. Remember to change all URLs. You also have to change the URLs in the `camunda-worker.js` files to `localhost`.
 
+### Shut down
+
+Press `Strg + c` in all terminal windows.
