@@ -91,7 +91,13 @@ To run Camunda you need a Java Runtime Environment version 1.7 or higher.
 
 Download [Camunda](https://camunda.com/download/) and the [Camunda Modeler](https://camunda.com/download/modeler/). 
 
-Follow the instructions on the Camunda page to start the Camunda server. Run the Camunda Modeler and open the availability.bpmn. Click on the upload/deploy button on the top bar and deploy the Model with the name "BookAvailability".
+Follow the instructions on the Camunda page to start the Camunda server. Run the Camunda Modeler and open the availability.bpmn. Click on the upload/deploy button on the top bar (rightmost) and deploy the Model with the name "BookAvailability".
 
 Afterwards you can follow the steps from the Base example. Remember to change all URLs. You also have to change the URLs in the `camunda-worker.js` files to `localhost`.
+
+### Shut down
+
+Press `Strg + c` in all terminal windows.
+
+
 
