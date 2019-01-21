@@ -10,12 +10,13 @@ const addLend = lend => {
     const id = uuid();
     // The spread operator (...) is used to create a new object which contains all elements of the received lend object
     // and adds new keys or changes keys of the object. 
-    // Here the id is added to the lend and a fees key is added to the customer object.
+    // Here the id and a pending state is added to the lend and a fees key is added to the customer object.
     let newlend = {...lend, id: id, state: "PENDING", customer: {...lend.customer, fees: 0}};
     lends.push(newlend);
     return newlend;
 } 
 
+// This was added to explicitly change the state of the lend object
 const confirmLend = id => {
     const index = lends.findIndex(element => element.id === id);
     lends[index] = {...lends[index], state: "ACTIVE"};

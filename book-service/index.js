@@ -5,7 +5,7 @@ const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-//require the client to create it
+// Require the client to create an instance of it so it can start polling for tasks
 const client = require('./camunda-worker').client;
 
 // Tell express to use its JSON middleware.

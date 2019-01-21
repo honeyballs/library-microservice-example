@@ -6,7 +6,7 @@ const fetch = require('node-fetch');
 const app = express();
 const PORT = process.env.PORT || 3002;
 
-//require the client to create it
+// Require the client to create an instance of it so it can start polling for tasks
 const client = require('./camunda-worker').client;
 
 // Tell express to use its JSON middleware.
@@ -26,13 +26,13 @@ app.get('/', (req, res) => {
 });
 
 app.post('/add', (req, res) => {
+    // Create a new lend object in a pending state and fulfill the request
     let newLend = db.addLend(req.body);
     res.json(newLend);
-    // Create process variables
+    // Create process variables and start the process
     let idArray = newLend.books.map(book => ({
         id: book.id
     }));
-    console.log(idArray);
     let variables = {
         variables: {
             lendId: {
